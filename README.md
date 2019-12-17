@@ -47,30 +47,11 @@ import { LitElement, html } from 'lit-element';
 import '@advanced-rest-client/cc-authorization-method/cc-authorization-method.js';
 
 class SampleElement extends LitElement {
-  static get properties() {
-    return {
-      amfModel: { type: Array },
-      endpoint: { type: String },
-      method: { type: String },
-    };
-  }
-
-  get security() {
-    const { amfModel, endpoint, method } = this;
-    return this.readSecurityFor(amfModel, endpoint, method);
-  }
-
-  readSecurityFor(amf, endpoint, method) {
-    // implement me
-  }
-
   render() {
     const { amfModel, security } = this;
     return html`
     <cc-authorization-method
-      type="OAuth 2"
-      .amf="${amfModel}"
-      .security="${security}"
+      type="client certificate"
       @change="${this._securityChangeHandler}"></cc-authorization-method>
     `;
   }
