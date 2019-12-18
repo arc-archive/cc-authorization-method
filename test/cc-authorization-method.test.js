@@ -36,7 +36,7 @@ describe('cc-authorization-method', function() {
         element.removeEventListener('client-certificate-list', f);
         e.preventDefault();
         e.detail.result = Promise.resolve(result || []);
-        setTimeout(() => resolve());
+        nextFrame().then(() => resolve())
       });
       element.reset();
     });
@@ -176,10 +176,17 @@ describe('cc-authorization-method', function() {
 
   describe('client-certificate-delete event handler', () => {
     let element;
+
+    before(async () => {
+      await DataGenerator.insertCertificatesData({});
+    });
+
+    after(async () => {
+      await DataGenerator.destroyClientCertificates();
+    });
+
     beforeEach(async () => {
-      element = await basicFixture();
-      const items = DataGenerator.generateClientCertificates({ size: 5 });
-      await untilAfterQuery(element, items);
+      element = await queryDataFixture();
     });
 
     function fire(id, cancelable) {
@@ -197,30 +204,39 @@ describe('cc-authorization-method', function() {
     }
 
     it('removes existing item', () => {
+      const before = element.items.length;
       const item = element.items[0];
       fire(item._id);
-      assert.lengthOf(element.items, 4);
+      assert.lengthOf(element.items, before - 1);
     });
 
     it('ignores cancelable event', () => {
+      const before = element.items.length;
       const item = element.items[0];
       fire(item._id, true);
-      assert.lengthOf(element.items, 5);
+      assert.lengthOf(element.items, before);
     });
 
     it('ignores when not on the list', () => {
+      const before = element.items.length;
       fire('some-id', true);
-      assert.lengthOf(element.items, 5);
+      assert.lengthOf(element.items, before);
     });
   });
 
   describe('client-certificate-insert event handler', () => {
     let element;
+
+    before(async () => {
+      await DataGenerator.insertCertificatesData({});
+    });
+
+    after(async () => {
+      await DataGenerator.destroyClientCertificates();
+    });
+
     beforeEach(async () => {
-      element = await basicFixture();
-      const items = DataGenerator.generateClientCertificates({ size: 5 });
-      items.forEach((item, index) => item._id = index + '_');
-      await untilAfterQuery(element, items);
+      element = await queryDataFixture();
     });
 
     function fire(detail, cancelable) {
@@ -252,20 +268,27 @@ describe('cc-authorization-method', function() {
     });
 
     it('Adds new item to the list', () => {
+      const before = element.items.length;
       const item = DataGenerator.generateClientCertificate();
-      item._id = '6_';
+      item._id = (before + 1) + '_';
       fire(item);
-      assert.lengthOf(element.items, 6);
+      assert.lengthOf(element.items, before + 1);
     });
   });
 
-  describe('Selecting and item', () => {
+  describe('Selecting an item', () => {
     let element;
+
+    before(async () => {
+      await DataGenerator.insertCertificatesData({});
+    });
+
+    after(async () => {
+      await DataGenerator.destroyClientCertificates();
+    });
+
     beforeEach(async () => {
-      element = await basicFixture();
-      const items = DataGenerator.generateClientCertificates({ size: 5 });
-      items.forEach((item, index) => item._id = index + '_');
-      await untilAfterQuery(element, items);
+      element = await queryDataFixture();
     });
 
     it('changes selection on item click', () => {
@@ -304,11 +327,16 @@ describe('cc-authorization-method', function() {
 
   describe('serialize()', () => {
     let element;
+    before(async () => {
+      await DataGenerator.insertCertificatesData({});
+    });
+
+    after(async () => {
+      await DataGenerator.destroyClientCertificates();
+    });
+
     beforeEach(async () => {
-      element = await basicFixture();
-      const items = DataGenerator.generateClientCertificates({ size: 5 });
-      items.forEach((item, index) => item._id = index + '_');
-      await untilAfterQuery(element, items);
+      element = await queryDataFixture();
     });
 
     it('returns empty object when no selection', () => {
