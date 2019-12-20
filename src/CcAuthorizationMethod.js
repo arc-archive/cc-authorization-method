@@ -38,15 +38,20 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
     return METHOD_CC;
   }
 
-  set type(value) {
-    throw new Error(`Cannot set type value to ${value}. The type is read only.`);
-  }
+  set type(value) {}
   /**
    * @return {Boolean} True if the `items` array has values.
    */
   get hasItems() {
     const { items } = this;
     return !!(items && items.length);
+  }
+
+  connectedCallback() {
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
+    this.setAttribute('type', METHOD_CC);
   }
 
   /**

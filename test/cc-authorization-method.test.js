@@ -61,10 +61,13 @@ describe('cc-authorization-method', function() {
     it('has read only "type"', async () => {
       const element = await basicFixture();
       assert.equal(element.type, METHOD_CC, 'getter is set');
-      assert.throws(() => {
-        element.type = 'basic';
-      }, 'Cannot set type value to basic. The type is read only.',
-      'setter throws an error');
+      element.type = 'basic';
+      assert.equal(element.type, METHOD_CC, 'setter is ignored');
+    });
+
+    it('sets "type" attribute', async () => {
+      const element = await basicFixture();
+      assert.equal(element.getAttribute('type'), METHOD_CC);
     });
   });
 
