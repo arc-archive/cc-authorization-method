@@ -23,6 +23,10 @@
         {
           "name": "importButton",
           "type": "Boolean"
+        },
+        {
+          "name": "none",
+          "type": "Boolean"
         }
       ],
       "events": [],
