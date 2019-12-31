@@ -50,4 +50,8 @@ anypoint-radio-button {
   overflow: auto;
   max-height: 400px;
 }
+
+.empty-screen {
+  margin: 1em 12px;
+}
 `;
