@@ -4,6 +4,7 @@ import { DataGenerator } from '@advanced-rest-client/arc-data-generator/arc-data
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@advanced-rest-client/arc-models/client-certificate-model.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
+import '@anypoint-web-components/anypoint-checkbox/anypoint-checkbox.js';
 import '../cc-authorization-method.js';
 
 
@@ -15,6 +16,7 @@ class DemoPage extends ArcDemoPage {
       'compatibility',
       'outlined',
       'mainChangesCounter',
+      'allowNone',
     ]);
     this._componentName = 'cc-authorization-method';
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
@@ -72,6 +74,7 @@ class DemoPage extends ArcDemoPage {
       outlined,
       mainChangesCounter,
       demoState,
+      allowNone,
     } = this;
     return html`
       <section class="documentation-section">
@@ -90,10 +93,20 @@ class DemoPage extends ArcDemoPage {
           <cc-authorization-method
             ?compatibility="${compatibility}"
             ?outlined="${outlined}"
+            ?none="${allowNone}"
             slot="content"
             @change="${this._mainChangeHandler}"
           ></cc-authorization-method>
 
+          <label slot="options" id="textAreaOptionsLabel">Options</label>
+          <anypoint-checkbox
+            aria-describedby="textAreaOptionsLabel"
+            slot="options"
+            name="allowNone"
+            @change="${this._toggleMainOption}"
+          >
+            Allow none
+          </anypoint-checkbox>
         </arc-interactive-demo>
         <p>Change events counter: ${mainChangesCounter}</p>
 

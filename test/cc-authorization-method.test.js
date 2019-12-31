@@ -10,10 +10,10 @@ describe('cc-authorization-method', function() {
     return (await fixture(html`<cc-authorization-method></cc-authorization-method>`));
   }
 
-  async function queryDataFixture() {
+  async function queryDataFixture(none) {
     const elmRequest = fixture(html`<div>
       <client-certificate-model></client-certificate-model>
-      <cc-authorization-method></cc-authorization-method>
+      <cc-authorization-method ?none="${none}"></cc-authorization-method>
     </div>`);
     return new Promise((resolve) => {
       window.addEventListener('client-certificate-list', function f(e) {
@@ -113,6 +113,13 @@ describe('cc-authorization-method', function() {
     });
 
     it('renders list items', () => {
+      const nodes = element.shadowRoot.querySelectorAll('anypoint-radio-button');
+      assert.lengthOf(nodes, 15);
+    });
+
+    it('renders list items with "none"', async () => {
+      element.none = true;
+      await nextFrame();
       const nodes = element.shadowRoot.querySelectorAll('anypoint-radio-button');
       assert.lengthOf(nodes, 16);
     });
@@ -280,8 +287,6 @@ describe('cc-authorization-method', function() {
   });
 
   describe('Selecting an item', () => {
-    let element;
-
     before(async () => {
       await DataGenerator.insertCertificatesData({});
     });
@@ -290,18 +295,22 @@ describe('cc-authorization-method', function() {
       await DataGenerator.destroyClientCertificates();
     });
 
-    beforeEach(async () => {
-      element = await queryDataFixture();
-    });
-
-    it('changes selection on item click', () => {
+    it('changes selection on item click', async () => {
+      const element = await queryDataFixture();
       const node = element.shadowRoot.querySelectorAll('anypoint-radio-button')[1];
       MockInteractions.tap(node);
-      assert.notEqual(element.selected, 'none');
       assert.equal(element.selected, node.dataset.id);
     });
 
-    it('notifies change when selection is made', () => {
+    it('selects "none" option', async () => {
+      const element = await queryDataFixture(true);
+      const node = element.shadowRoot.querySelectorAll('anypoint-radio-button')[0];
+      MockInteractions.tap(node);
+      assert.equal(element.selected, 'none');
+    });
+
+    it('notifies change when selection is made', async () => {
+      const element = await queryDataFixture();
       const node = element.shadowRoot.querySelectorAll('anypoint-radio-button')[1];
       const spy = sinon.spy();
       element.addEventListener('change', spy);

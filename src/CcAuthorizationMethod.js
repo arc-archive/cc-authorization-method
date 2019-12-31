@@ -31,6 +31,10 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
        * The id of selected certificate.
        */
       selected: { type: String },
+      /**
+       * When set it renders `none` oprtion in the list of certificates.
+       */
+      none: { type: Boolean }
     };
   }
 
@@ -124,7 +128,10 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
   }
 
   [defaultItemTemplate]() {
-    const { compatibility } = this;
+    const { compatibility, none } = this;
+    if (!none) {
+      return '';
+    }
     return html`<anypoint-radio-button
       data-id="none"
       ?compatibility="${compatibility}"
