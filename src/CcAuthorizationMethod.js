@@ -4,6 +4,7 @@ import { CcConsumerMixin } from '@advanced-rest-client/client-certificates-consu
 import { notifyChange } from '@advanced-rest-client/authorization-method/src/Utils.js';
 import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-button.js';
 import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-group.js';
+import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import '@anypoint-web-components/anypoint-item/anypoint-item.js';
 import '@advanced-rest-client/date-time/date-time.js';
 import styles from './Styles.js';
@@ -14,15 +15,14 @@ export const certItemTemplate = Symbol();
 export const emptyTemplate = Symbol();
 export const contentTemplate = Symbol();
 export const dateTimeTemplate = Symbol();
+export const importTemplate = Symbol();
 export const selectedHandler = Symbol();
+export const importHandler = Symbol();
 
 export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) {
 
   get styles() {
-    return [
-      // super.styles,
-      styles,
-    ];
+    return styles;
   }
 
   static get properties() {
@@ -32,9 +32,19 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
        */
       selected: { type: String },
       /**
-       * When set it renders `none` oprtion in the list of certificates.
+       * When set it renders `none` option in the list of certificates.
        */
-      none: { type: Boolean }
+      none: { type: Boolean },
+      /**
+       * When set it renders `import certificate` button.
+       * When enabled the application must handle
+       * `client-certificate-import` event dispatched by this element
+       * to render some kind of UI to import a certificate.
+       * The element does not have an UI to import certificates.
+       *
+       * The event bubbles and is cancelable.
+       */
+      importButton: { type: Boolean }
     };
   }
 
@@ -97,9 +107,18 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
     notifyChange(this);
   }
 
+  [importHandler]() {
+    this.dispatchEvent(new CustomEvent('client-certificate-import', {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    }));
+  }
+
   render() {
     const { hasItems } = this;
     return html`<style>${this.styles}</style>
+    ${this[importTemplate]()}
     ${hasItems ? this[contentTemplate]() : this[emptyTemplate]()}`;
   }
 
@@ -162,4 +181,25 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
       minute="numeric"
     ></date-time>`;
   }
+
+  [importTemplate]() {
+    const { importButton } = this;
+    if (!importButton) {
+      return '';
+    }
+    return html`
+    <anypoint-button
+      title="Opens a dialog that allows to import client certificate"
+      aria-label="Activate to open import certificate dialog"
+      @click="${this[importHandler]}"
+    >Import certificate</anypoint-button>`;
+  }
+
+  /**
+   * Dispatched when the user requested to import a certificate.
+   *
+   * The event bubbles and is cancelable.
+   *
+   * @event client-certificate-import
+   */
 }

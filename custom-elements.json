@@ -7,7 +7,7 @@
       "properties": [
         {
           "name": "selected",
-          "type": "Booelan"
+          "type": "Boolean"
         },
         {
           "name": "type",
@@ -17,12 +17,20 @@
         },
         {
           "name": "hasItems",
-          "type": "Booelan",
+          "type": "Boolean",
           "readOnly": true
+        },
+        {
+          "name": "importButton",
+          "type": "Boolean"
         }
       ],
       "events": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "client-certificate-import"
+        }
+      ],
       "cssProperties": []
     }
   ]

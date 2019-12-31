@@ -5,6 +5,9 @@ import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@advanced-rest-client/arc-models/client-certificate-model.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import '@anypoint-web-components/anypoint-checkbox/anypoint-checkbox.js';
+import '@advanced-rest-client/client-certificates-panel/certificate-import.js';
+import '@anypoint-web-components/anypoint-dialog/anypoint-dialog.js';
+import '@anypoint-web-components/anypoint-dialog/anypoint-dialog-scrollable.js';
 import '../cc-authorization-method.js';
 
 
@@ -17,6 +20,8 @@ class DemoPage extends ArcDemoPage {
       'outlined',
       'mainChangesCounter',
       'allowNone',
+      'allowImportButton',
+      'importOpened',
     ]);
     this._componentName = 'cc-authorization-method';
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
@@ -28,6 +33,10 @@ class DemoPage extends ArcDemoPage {
     this._mainChangeHandler = this._mainChangeHandler.bind(this);
     this.generateData = this.generateData.bind(this);
     this.deleteData = this.deleteData.bind(this);
+    this._certImportHandler = this._certImportHandler.bind(this);
+    this._closeImportHandler = this._closeImportHandler.bind(this);
+
+    window.addEventListener('client-certificate-import', this._certImportHandler);
   }
 
   _toggleMainOption(e) {
@@ -66,6 +75,14 @@ class DemoPage extends ArcDemoPage {
     document.body.dispatchEvent(e);
   }
 
+  _certImportHandler() {
+    this.importOpened = true;
+  }
+
+  _closeImportHandler() {
+    this.importOpened = false;
+  }
+
   _demoTemplate() {
     const {
       demoStates,
@@ -75,6 +92,7 @@ class DemoPage extends ArcDemoPage {
       mainChangesCounter,
       demoState,
       allowNone,
+      allowImportButton,
     } = this;
     return html`
       <section class="documentation-section">
@@ -94,6 +112,7 @@ class DemoPage extends ArcDemoPage {
             ?compatibility="${compatibility}"
             ?outlined="${outlined}"
             ?none="${allowNone}"
+            ?importButton="${allowImportButton}"
             slot="content"
             @change="${this._mainChangeHandler}"
           ></cc-authorization-method>
@@ -107,7 +126,16 @@ class DemoPage extends ArcDemoPage {
           >
             Allow none
           </anypoint-checkbox>
+          <anypoint-checkbox
+            aria-describedby="textAreaOptionsLabel"
+            slot="options"
+            name="allowImportButton"
+            @change="${this._toggleMainOption}"
+          >
+            Allow import
+          </anypoint-checkbox>
         </arc-interactive-demo>
+
         <p>Change events counter: ${mainChangesCounter}</p>
 
         <div class="data-options">
@@ -116,6 +144,8 @@ class DemoPage extends ArcDemoPage {
           <anypoint-button @click="${this.deleteData}">Clear data</anypoint-button>
         </div>
       </section>
+
+      ${this._importDialog()}
     `;
   }
 
@@ -145,6 +175,18 @@ class DemoPage extends ArcDemoPage {
           </li>
         </ul>
       </section>`;
+  }
+
+  _importDialog() {
+    const { importOpened } = this;
+    return html`
+    <anypoint-dialog ?opened="${importOpened}">
+      <h2>Import a certificate</h2>
+      <anypoint-dialog-scrollable>
+        <certificate-import @close="${this._closeImportHandler}"></certificate-import>
+      </anypoint-dialog-scrollable>
+    </anypoint-dialog>
+    `;
   }
 
   contentTemplate() {

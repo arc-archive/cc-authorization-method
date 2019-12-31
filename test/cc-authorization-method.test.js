@@ -10,6 +10,10 @@ describe('cc-authorization-method', function() {
     return (await fixture(html`<cc-authorization-method></cc-authorization-method>`));
   }
 
+  async function importButtonFixture() {
+    return (await fixture(html`<cc-authorization-method importButton></cc-authorization-method>`));
+  }
+
   async function queryDataFixture(none) {
     const elmRequest = fixture(html`<div>
       <client-certificate-model></client-certificate-model>
@@ -363,6 +367,30 @@ describe('cc-authorization-method', function() {
       assert.deepEqual(result, {
         id: node.dataset.id
       });
+    });
+  });
+
+  describe('#importButton', () => {
+    it('does not render import button by default', async () => {
+      const element = await basicFixture();
+      const button = element.shadowRoot.querySelector('anypoint-button');
+      assert.notOk(button);
+    });
+
+    it('renders import button with importButton', async () => {
+      const element = await importButtonFixture();
+      const button = element.shadowRoot.querySelector('anypoint-button');
+      assert.ok(button);
+    });
+
+    it('dispatches client-certificate-import event when clicked', async () => {
+      const element = await importButtonFixture();
+
+      const spy = sinon.spy();
+      window.addEventListener('client-certificate-import', spy);
+      const button = element.shadowRoot.querySelector('anypoint-button');
+      MockInteractions.tap(button);
+      assert.isTrue(spy.called);
     });
   });
 });
