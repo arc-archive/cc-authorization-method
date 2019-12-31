@@ -31,7 +31,6 @@ anypoint-radio-button {
 
 .default {
   align-items: center;
-
 }
 
 .name {

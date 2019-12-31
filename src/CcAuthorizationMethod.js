@@ -109,7 +109,7 @@ export class CcAuthorizationMethod extends CcConsumerMixin(AuthorizationMethod) 
       items,
       selected,
     } = this;
-    return html`<div class="form-title">Select a certificate</div>
+    return html`
     <div class="list">
       <anypoint-radio-group
         ?compatibility="${compatibility}"
