@@ -24,22 +24,6 @@
     "url": "https://github.com/advanced-rest-client/cc-authorization-method/issues",
     "email": "arc@mulesoft.com"
   },
-  "scripts": {
-    "start": "es-dev-server --app-index demo/index.html --node-resolve --open --watch",
-    "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore",
-    "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
-    "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
-    "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
-    "format": "npm run format:eslint && npm run format:prettier",
-    "test": "karma start --coverage",
-    "test:watch": "karma start --auto-watch=true --single-run=false",
-    "test:update-snapshots": "karma start --update-snapshots",
-    "test:prune-snapshots": "karma start --prune-snapshots",
-    "test:bs": "karma start karma.bs.config.js --coverage",
-    "test:sl": "karma start karma.sl.config.js  --compatibility auto --coverage",
-    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
-  },
   "dependencies": {
     "@advanced-rest-client/authorization-method": "^0.1.7",
     "@advanced-rest-client/client-certificates-consumer-mixin": "^1.0.2",
@@ -49,47 +33,5 @@
     "@anypoint-web-components/anypoint-radio-button": "^0.1.4",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0"
-  },
-  "devDependencies": {
-    "@advanced-rest-client/arc-data-generator": "^3.0.7",
-    "@advanced-rest-client/arc-demo-helper": "^1.0.17",
-    "@advanced-rest-client/arc-models": "^3.0.3",
-    "@advanced-rest-client/client-certificates-panel": "^1.0.6",
-    "@advanced-rest-client/eslint-config": "^1.1.4",
-    "@advanced-rest-client/prettier-config": "^0.1.0",
-    "@advanced-rest-client/testing-karma-sl": "^1.1.0",
-    "@anypoint-web-components/anypoint-checkbox": "^1.0.2",
-    "@anypoint-web-components/anypoint-dialog": "^0.1.1",
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@open-wc/testing": "^2.0.0",
-    "@open-wc/testing-karma": "^3.2.24",
-    "@open-wc/testing-karma-bs": "^1.3.24",
-    "@polymer/gen-typescript-declarations": "^1.6.2",
-    "@polymer/iron-test-helpers": "^3.0.1",
-    "es-dev-server": "^1.34.0",
-    "eslint": "^6.8.0",
-    "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
-    "sinon": "^7.5.0",
-    "webpack-merge": "^4.1.5"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@advanced-rest-client/eslint-config"
-    ]
-  },
-  "prettier": "@advanced-rest-client/prettier-config",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
   }
 }
